@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -94,8 +95,77 @@ public class BitmapUtil {
         return outputBitmap;
     }
 
-    // http://blog.163.com/wang_1980_ww/blog/static/11114105201181710535756/
-    // http://www.cnblogs.com/huangzx/p/4383757.html
-    // http://blog.csdn.net/mfcing/article/details/48790235
-    // http://www.jianshu.com/p/98c88f9ceafa
+
+    /**
+     * compound two bitmap
+     * the objectBitmap is default locate in the left-top corner
+     *
+     * @param srcBitmap
+     * @param objectBitmap
+     * @return
+     */
+    public static Bitmap compoundBitmap(Bitmap srcBitmap, Bitmap objectBitmap) {
+        if (srcBitmap == null) {
+            return null;
+        }
+        if (objectBitmap == null) {
+            return srcBitmap;
+        }
+        return compoundBitmap(srcBitmap, objectBitmap, 0, 0);
+    }
+
+
+    /**
+     * compound two bitmap with the appointed position
+     *
+     * @param srcBitmap
+     * @param objectBitmap
+     * @param left
+     * @param top
+     * @return
+     */
+    public static Bitmap compoundBitmap(Bitmap srcBitmap, Bitmap objectBitmap, float left, float top) {
+        int srcWidth = srcBitmap.getWidth();
+        int srcHeight = srcBitmap.getHeight();
+
+        // create a new bitmap
+        Bitmap resultBitmap = Bitmap.createBitmap(srcWidth, srcHeight, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(resultBitmap);
+
+        // draw the src bitmap
+        canvas.drawBitmap(srcBitmap, 0, 0, null);
+
+        // draw the object bitmap
+        canvas.drawBitmap(objectBitmap, left, top, null);
+
+        // save
+        canvas.save(Canvas.ALL_SAVE_FLAG);
+        canvas.restore();
+
+        return resultBitmap;
+    }
+
+
+    /**
+     * rotate the src bitmap with some degrees
+     *
+     * @param srcBitmap
+     * @param degrees
+     * @return
+     */
+    public static Bitmap getRotateBitmap(Bitmap srcBitmap, float degrees) {
+        if (srcBitmap == null) {
+            return null;
+        }
+
+        int srcWidth = srcBitmap.getWidth();
+        int srcHeight = srcBitmap.getHeight();
+
+        // rotate matrix
+        Matrix matrix = new Matrix();
+        matrix.setRotate(degrees);
+
+        return Bitmap.createBitmap(srcBitmap, 0, 0, srcWidth, srcHeight, matrix, true);
+    }
+
 }
