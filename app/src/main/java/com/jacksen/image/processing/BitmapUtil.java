@@ -92,6 +92,9 @@ public class BitmapUtil {
         canvas.drawRoundRect(rectF, xRadius, yRadius, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(originBitmap, rect, rect, paint);
+
+        canvas.save(Canvas.ALL_SAVE_FLAG);
+        canvas.restore();
         return outputBitmap;
     }
 
@@ -143,6 +146,32 @@ public class BitmapUtil {
         canvas.restore();
 
         return resultBitmap;
+    }
+
+    /**
+     * 将objectBitmap合成到右下角，可以设置margin值
+     *
+     * @param srcBitmap
+     * @param objectBitmap
+     * @param margin       unit : px
+     * @return
+     */
+    public static Bitmap compoundBitmapAtBottomRightCorner(Bitmap srcBitmap, Bitmap objectBitmap, int margin) {
+        if (srcBitmap == null || objectBitmap == null) {
+            return null;
+        }
+        int srcWidth = srcBitmap.getWidth();
+        int srcHeight = srcBitmap.getHeight();
+
+        int objectWidth = objectBitmap.getWidth();
+        int objectHeight = objectBitmap.getHeight();
+
+
+        if (objectWidth + margin * 2 > srcWidth || objectHeight + margin * 2 > srcHeight) {
+            margin = 0;
+        }
+
+        return compoundBitmap(srcBitmap, objectBitmap, (srcWidth - objectWidth - margin), (srcHeight - objectHeight - margin));
     }
 
 

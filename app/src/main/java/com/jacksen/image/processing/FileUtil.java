@@ -3,6 +3,7 @@ package com.jacksen.image.processing;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
+import android.text.TextUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,19 +23,22 @@ public class FileUtil {
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
 
-    /**
-     * @param type
-     * @return
-     */
-    public static File getOutputMediaFile(int type) {
+    public static File getOutputMediaFile(int type, String folderName) {
         if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             return null;
         }
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "mfar");
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                return null;
+        File mediaStorageDir = null;
+        if (!TextUtils.isEmpty(folderName)) {
+            mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), folderName);
+            if (!mediaStorageDir.exists()) {
+                if (!mediaStorageDir.mkdirs()) {
+                    return null;
+                }
             }
+        }
+
+        if (mediaStorageDir == null) {
+            return null;
         }
 
         //
@@ -43,10 +47,18 @@ public class FileUtil {
         if (type == MEDIA_TYPE_IMAGE) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator + "img_" + timeStamp + ".jpg");
         } else if (type == MEDIA_TYPE_VIDEO) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "img_" + timeStamp + ".jpg");
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "img_" + timeStamp + ".mp4");
         }
 
         return mediaFile;
+    }
+
+    /**
+     * @param type
+     * @return
+     */
+    public static File getOutputMediaFile(int type) {
+        return getOutputMediaFile(type, "");
     }
 
     public static Uri getOutputMediaFileUri(int type) {
