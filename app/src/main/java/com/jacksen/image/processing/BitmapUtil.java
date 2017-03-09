@@ -11,6 +11,10 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+
 /**
  * @author jacksen
  * @create_date 2017/3/4.
@@ -39,6 +43,66 @@ public class BitmapUtil {
         options.inJustDecodeBounds = false;
 
         return BitmapFactory.decodeResource(res, resId, options);
+    }
+
+    /**
+     * @param targetFile
+     * @param reqWidth
+     * @param reqHeight
+     * @return
+     */
+    public static Bitmap decodeSampledBitmapFromLocal(File targetFile, int reqWidth, int reqHeight) {
+        if (targetFile == null || !targetFile.isFile() || !targetFile.canRead()) {
+            return null;
+        }
+
+        return decodeSampledBitmapFromLocalByCompress(targetFile, reqWidth, reqHeight, 80);
+    }
+
+    /**
+     * @param targetFile
+     * @param reqWidth
+     * @param reqHeight
+     * @param quality
+     * @return
+     */
+    public static Bitmap decodeSampledBitmapFromLocalByCompress(File targetFile, int reqWidth, int reqHeight, int quality) {
+        // TODO judge the file is pic or not
+
+
+        if (quality < 0 || quality > 100) {
+            quality = 100;
+        }
+
+        // first decode with inJustDecodeBounds = true to check dimensions
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(targetFile.getPath(), options);
+
+        // calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inPreferredConfig = Bitmap.Config.ARGB_4444;
+
+        // decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(targetFile.getPath(), options);
+
+        // compress bitmap
+        ByteArrayOutputStream outputStream = null;
+        try {
+            outputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+        } finally {
+            try {
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return bitmap;
     }
 
     /**

@@ -1,10 +1,12 @@
 package com.jacksen.image.processing;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -151,30 +153,56 @@ public class FileUtil {
     // *************************** read bitmap from file ***************************** //
 
     /**
-     * read bitmap from file
-     *
-     * @param targetFile
-     * @return
-     */
-    public static Bitmap readBitmapFromFile(File targetFile) {
-        if (targetFile == null || !targetFile.isFile() || !targetFile.canRead()) {
-            return null;
-        }
-        return readBitmapFromFilePath(targetFile.getPath());
-    }
-
-    /**
      * read bitmap from file path
      *
      * @param filePath
      * @return
      */
     public static Bitmap readBitmapFromFilePath(String filePath) {
+        return readBitmapFromFile(new File(filePath));
+    }
+
+    /**
+     * read bitmap from file
+     *
+     * @param targetFile
+     * @return
+     */
+    public static Bitmap readBitmapFromFile(File targetFile) {
+        return readBitmapFromFileByCompress(targetFile, 100);
+    }
+
+    /**
+     * read bitmap from file by compress
+     *
+     * @param targetFile
+     * @param quality    default : 100
+     * @return
+     */
+    public static Bitmap readBitmapFromFileByCompress(File targetFile, int quality) {
+        if (targetFile == null || !targetFile.isFile() || !targetFile.canRead()) {
+            return null;
+        }
+
+        // TODO judge the file is pic or not
+
+        if (quality < 0 || quality > 100) {
+            quality = 100;
+        }
+
         // TODO  1. judge filePath type
 
         // TODO 2. read file
 
-        return null;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_4444;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(targetFile.getPath(), options);
+
+        ByteArrayOutputStream outputStream= new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+
+        return bitmap;
     }
 
 
