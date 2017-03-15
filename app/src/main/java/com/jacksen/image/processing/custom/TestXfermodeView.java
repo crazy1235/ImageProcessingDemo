@@ -1,4 +1,4 @@
-package com.jacksen.image.processing;
+package com.jacksen.image.processing.custom;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,7 +9,10 @@ import android.graphics.PorterDuffXfermode;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
+
+import com.jacksen.image.processing.R;
 
 /**
  * @author Admin
@@ -43,29 +46,32 @@ public class TestXfermodeView extends View {
     private void init() {
         paint = new Paint();
 
-        xfermode = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
+        xfermode = new PorterDuffXfermode(PorterDuff.Mode.SCREEN);
     }
 
     /**
      * @return
      */
     private Bitmap getCircleBitmap() {
-        Bitmap circle = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
+        Bitmap circle = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(circle);
         c.drawARGB(0, 0, 0, 0);
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
         p.setColor(ContextCompat.getColor(this.getContext(), R.color.colorPrimary));
-        c.drawCircle(100, 100, 100, p);
+        c.drawCircle(200, 200, 200, p);
         return circle;
     }
 
+    /**
+     * @return
+     */
     private Bitmap getRectangleBitmap() {
-        Bitmap rectangle = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
+        Bitmap rectangle = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(rectangle);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(ContextCompat.getColor(this.getContext(), R.color.colorAccent));
         canvas.drawARGB(0, 0, 0, 0);
-        canvas.drawRect(0, 0, 200, 200, paint);
+        canvas.drawRect(0, 0, 500, 500, paint);
         return rectangle;
     }
 
@@ -73,27 +79,28 @@ public class TestXfermodeView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        Bitmap circleBitmap = getCircleBitmap();
-        Bitmap rectangleBitmap = getRectangleBitmap();
+        Log.d("TestXfermodeView", "onDraw");
 
         setLayerType(LAYER_TYPE_SOFTWARE, null);
 
-        canvas.drawARGB(0, 0, 0, 0);
+        Bitmap circleBitmap = getCircleBitmap();
+        Bitmap rectangleBitmap = getRectangleBitmap();
 
-        // 1. 先画正方形
-        canvas.drawBitmap(rectangleBitmap, 100, 100, paint);
+        canvas.drawARGB(255, 139, 197, 186);
+
+        int layerId = canvas.saveLayer(0, 0, canvas.getWidth(), canvas.getHeight(), null, Canvas.ALL_SAVE_FLAG);
+
+        // 1. 圆形
+        canvas.drawBitmap(circleBitmap, 0, 0, paint);
 
         //
         paint.setXfermode(xfermode);
 
-        // 2. 后画圆形
-        canvas.drawBitmap(circleBitmap, 0, 0, paint);
+        // 2. 正方形
+        canvas.drawBitmap(rectangleBitmap, 200, 200, paint);
 
+        paint.setXfermode(null);
 
-
-//        canvas.drawBitmap(circleBitmap, 0, 0, paint);
-//        paint.setXfermode(xfermode);
-//        canvas.drawBitmap(rectangleBitmap, 100, 100, paint);
-
+        canvas.restoreToCount(layerId);
     }
 }

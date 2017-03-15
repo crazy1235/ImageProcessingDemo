@@ -16,7 +16,7 @@
         android:visibility="visible" />
 
 
-    <com.jacksen.image.processing.TestXfermodeView
+    <com.jacksen.image.processing.custom.TestXfermodeView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />

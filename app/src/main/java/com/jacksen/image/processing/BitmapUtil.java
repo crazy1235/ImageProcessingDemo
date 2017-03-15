@@ -296,4 +296,29 @@ public class BitmapUtil {
         return outputBitmap;
     }
 
+    /**
+     * @param originBitmap
+     * @param radius
+     * @return
+     */
+    public static Bitmap createCircleImage(Bitmap originBitmap, int radius) {
+        Bitmap targetBitmap = Bitmap.createBitmap(radius * 2, radius * 2, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(targetBitmap);
+
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+        // 1. circle
+        canvas.drawCircle(radius, radius, radius, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+
+        // 2.
+
+        canvas.drawBitmap(originBitmap, (originBitmap.getWidth() - radius * 2) / 2, (originBitmap.getHeight() - radius * 2), paint);
+
+        paint.setXfermode(null);
+
+        return targetBitmap;
+    }
+
 }
