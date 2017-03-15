@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -259,6 +260,40 @@ public class BitmapUtil {
         matrix.setRotate(degrees);
 
         return Bitmap.createBitmap(srcBitmap, 0, 0, srcWidth, srcHeight, matrix, true);
+    }
+
+    /**
+     * @param bitmap
+     * @param padding
+     * @param radius
+     * @return
+     */
+    public static Bitmap createRoundBitmap(Bitmap bitmap, int padding, int radius) {
+        if (bitmap == null) {
+            return null;
+        }
+        Bitmap outputBitmap = Bitmap.createBitmap((bitmap.getWidth() + padding * 2), (bitmap.getWidth() + padding * 2), Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(outputBitmap);
+
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL);
+        RectF rectF = new RectF(0, 0, outputBitmap.getWidth(), outputBitmap.getHeight());
+        canvas.drawRoundRect(rectF, radius, radius, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawPaint(paint);
+
+        // 2.
+//        canvas.drawBitmap(bitmap, padding, padding, null);
+
+        // 3.
+        canvas.save(Canvas.ALL_SAVE_FLAG);
+        canvas.restore();
+
+        return outputBitmap;
     }
 
 }
