@@ -12,7 +12,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.jacksen.image.processing.SystemUtil;
+import com.jacksen.image.processing.utils.SystemUtil;
 
 
 /**

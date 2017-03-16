@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import com.jacksen.image.processing.utils.BitmapUtil;
+
 public class CustomViewActivity extends AppCompatActivity {
 
     private ImageView imageView1;

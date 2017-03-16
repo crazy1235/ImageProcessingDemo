@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.jacksen.image.processing.utils.BitmapUtil;
+import com.jacksen.image.processing.utils.SystemUtil;
+
 public class SecondActivity extends AppCompatActivity {
 
     private ImageView imageView;

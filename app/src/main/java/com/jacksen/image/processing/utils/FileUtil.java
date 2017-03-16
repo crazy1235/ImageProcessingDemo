@@ -1,4 +1,4 @@
-package com.jacksen.image.processing;
+package com.jacksen.image.processing.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

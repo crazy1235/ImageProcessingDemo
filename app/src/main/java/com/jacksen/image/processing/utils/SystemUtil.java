@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.jacksen.image.processing;
+package com.jacksen.image.processing.utils;
 
 import android.content.Context;
 import android.util.DisplayMetrics;

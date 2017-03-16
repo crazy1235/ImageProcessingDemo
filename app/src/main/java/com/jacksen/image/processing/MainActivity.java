@@ -9,6 +9,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.jacksen.image.processing.utils.BitmapUtil;
+import com.jacksen.image.processing.utils.FileUtil;
+
 public class MainActivity extends AppCompatActivity {
 
     private ImageView imageView;
